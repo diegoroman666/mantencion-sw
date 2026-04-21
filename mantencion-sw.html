@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard TI: Mantención de Software</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        
+        .hidden-view {
+            display: none !important;
+        }
+
+        /* Scanline effect for terminal vibe */
+        .scanlines {
+            position: relative;
+            overflow: hidden;
+        }
+        .scanlines::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-950 text-gray-200 font-mono selection:bg-cyan-500 selection:text-black scanlines">
+
+    <div id="app" class="h-full relative z-20">
+        
+        <!-- ============================================== -->
+        <!-- VISTA PRINCIPAL (DASHBOARD) -->
+        <!-- ============================================== -->
+        <div id="view-home" class="p-6 h-full min-h-screen flex flex-col justify-center items-center">
+            <div class="text-center mb-10">
+                <div class="flex justify-center mb-4">
+                    <i data-lucide="server-cog" class="w-16 h-16 text-cyan-500 animate-pulse"></i>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-bold text-cyan-400 mb-2 tracking-widest uppercase">Centro de Operaciones TI</h1>
+                <p class="text-gray-400 text-lg">Liceo: Asignación de Cuadrillas - Mantención de Software</p>
+                <div class="mt-4 inline-block bg-gray-900 border border-cyan-500/50 px-4 py-2 rounded text-sm text-cyan-300">
+                    STATUS: SISTEMA EN LÍNEA | EQUIPOS ACTIVOS: 4 (5 Alumnos p/equipo)
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
+                <!-- Tarjeta Equipo 1 -->
+                <div onclick="navigate('equipo1')" class="group bg-gray-900/80 border-l-4 border-l-yellow-500 border-t border-r border-b border-gray-800 hover:border-yellow-400 p-6 rounded cursor-pointer transition-all duration-300 hover:shadow-[0_0_20px_rgba(234,179,8,0.2)]">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-100">CUADRILLA ALFA</h2>
+                        <i data-lucide="cctv" class="w-8 h-8 text-yellow-500 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <h3 class="text-yellow-400 mb-2 font-bold">&gt; MISIÓN: SISTEMA CCTV</h3>
+                    <p class="text-sm text-gray-400">Instalación y configuración de cámaras IP de seguridad en el sector de Enseñanza Básica.</p>
+                </div>
+                
+                <!-- Tarjeta Equipo 2 -->
+                <div onclick="navigate('equipo2')" class="group bg-gray-900/80 border-l-4 border-l-blue-500 border-t border-r border-b border-gray-800 hover:border-blue-400 p-6 rounded cursor-pointer transition-all duration-300 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-100">CUADRILLA BETA</h2>
+                        <i data-lucide="network" class="w-8 h-8 text-blue-500 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <h3 class="text-blue-400 mb-2 font-bold">&gt; MISIÓN: REDES OFICINAS</h3>
+                    <p class="text-sm text-gray-400">Segmentación de red entre Enseñanza Media y Básica para seguridad de datos administrativos.</p>
+                </div>
+
+                <!-- Tarjeta Equipo 3 -->
+                <div onclick="navigate('equipo3')" class="group bg-gray-900/80 border-l-4 border-l-green-500 border-t border-r border-b border-gray-800 hover:border-green-400 p-6 rounded cursor-pointer transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.2)]">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-100">CUADRILLA GAMMA</h2>
+                        <i data-lucide="wrench" class="w-8 h-8 text-green-500 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <h3 class="text-green-400 mb-2 font-bold">&gt; MISIÓN: MANTENCIÓN P.</h3>
+                    <p class="text-sm text-gray-400">Diagnóstico, limpieza de hardware/software y optimización de equipos defectuosos.</p>
+                </div>
+
+                <!-- Tarjeta Equipo 4 -->
+                <div onclick="navigate('equipo4')" class="group bg-gray-900/80 border-l-4 border-l-purple-500 border-t border-r border-b border-gray-800 hover:border-purple-400 p-6 rounded cursor-pointer transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-100">CUADRILLA DELTA</h2>
+                        <i data-lucide="monitor-play" class="w-8 h-8 text-purple-500 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <h3 class="text-purple-400 mb-2 font-bold">&gt; MISIÓN: DESPLIEGUE LAB</h3>
+                    <p class="text-sm text-gray-400">Instalación desde cero (S.O., particiones y software base) en el Laboratorio del 2do piso.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VISTA EQUIPO 1: CÁMARAS (BÁSICA) -->
+        <!-- ============================================== -->
+        <div id="view-equipo1" class="hidden-view p-6 max-w-5xl mx-auto min-h-screen flex flex-col">
+            <div class="flex items-center gap-4 border-b border-gray-800 pb-4 mb-6">
+                <button onclick="navigate('home')" class="p-2 text-gray-400 hover:text-yellow-400 hover:bg-gray-800 rounded transition-colors" title="Volver">
+                    <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white uppercase"><span class="text-yellow-500">CUADRILLA ALFA:</span> CCTV Básica</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
+                <!-- Teoría / Paso a Paso -->
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded">
+                    <h3 class="text-lg text-yellow-400 mb-4 border-b border-gray-800 pb-2">&gt; MANUAL DE PROCEDIMIENTO</h3>
+                    <p class="text-sm text-gray-300 mb-4"><strong>Objetivo:</strong> Implementar 3 cámaras IP en el pabellón de Enseñanza Básica conectadas a un NVR (Network Video Recorder).</p>
+                    
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li class="flex gap-3">
+                            <span class="bg-yellow-500/20 text-yellow-500 font-bold px-2 py-1 rounded h-fit">01</span>
+                            <div>
+                                <strong class="text-gray-200">Cableado Estructurado:</strong> 
+                                Tirar cable UTP Cat6 desde el Switch PoE (Power over Ethernet) hasta los puntos ciegos del patio. El Switch PoE envía datos y energía por el mismo cable.
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="bg-yellow-500/20 text-yellow-500 font-bold px-2 py-1 rounded h-fit">02</span>
+                            <div>
+                                <strong class="text-gray-200">Fijación de Hardware:</strong> 
+                                Instalar los domos en el techo (altura min. 3m para evitar vandalismo). Conectar el RJ45 y sellar con caja estanca.
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="bg-yellow-500/20 text-yellow-500 font-bold px-2 py-1 rounded h-fit">03</span>
+                            <div>
+                                <strong class="text-gray-200">Asignación IP (Software):</strong> 
+                                Entrar a la interfaz web de cada cámara. Cambiar de DHCP a IP Estática (Ej: 192.168.1.101, 102, 103) para que el grabador siempre las encuentre.
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="bg-yellow-500/20 text-yellow-500 font-bold px-2 py-1 rounded h-fit">04</span>
+                            <div>
+                                <strong class="text-gray-200">Vincular al NVR:</strong> 
+                                En el NVR, agregar las IPs configuradas, ingresar usuario/contraseña de las cámaras y verificar el flujo de video (Main Stream).
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Simulación -->
+                <div class="bg-black border border-yellow-500/30 p-6 rounded flex flex-col">
+                    <h3 class="text-lg text-yellow-400 mb-4">&gt; SIMULADOR DE CONEXIÓN PoE</h3>
+                    <p class="text-sm text-gray-500 mb-6">Conecta los cables RJ45 al Switch para energizar las cámaras y asignarles IP.</p>
+
+                    <div class="flex-1 flex flex-col justify-around">
+                        <!-- NVR y Switch -->
+                        <div class="flex justify-center items-center gap-8 mb-8">
+                            <div class="text-center">
+                                <i data-lucide="server" class="w-12 h-12 text-gray-400 mx-auto"></i>
+                                <div class="text-xs mt-2 font-bold">NVR Grabador</div>
+                                <div class="text-[10px] text-gray-500">192.168.1.100</div>
+                            </div>
+                            <div class="w-16 h-1 bg-gray-700"></div>
+                            <div class="text-center bg-gray-800 p-4 rounded border border-gray-600 relative">
+                                <div class="text-xs font-bold text-yellow-500 mb-2">Switch PoE 4-Port</div>
+                                <div class="flex gap-2">
+                                    <div id="port-1" class="w-6 h-6 bg-black border border-gray-500 rounded-sm"></div>
+                                    <div id="port-2" class="w-6 h-6 bg-black border border-gray-500 rounded-sm"></div>
+                                    <div id="port-3" class="w-6 h-6 bg-black border border-gray-500 rounded-sm"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cámaras -->
+                        <div class="flex justify-around">
+                            <!-- Cam 1 -->
+                            <div class="flex flex-col items-center">
+                                <i id="icon-cam-1" data-lucide="cctv" class="w-10 h-10 text-gray-600 mb-2"></i>
+                                <span class="text-xs text-gray-400">Patio Básica</span>
+                                <span id="ip-cam-1" class="text-[10px] text-red-500 font-bold">OFFLINE</span>
+                                <button onclick="conectarCamara(1)" class="mt-3 text-[10px] bg-yellow-600 hover:bg-yellow-500 text-black px-2 py-1 rounded font-bold">Conectar RJ45</button>
+                            </div>
+                            <!-- Cam 2 -->
+                            <div class="flex flex-col items-center">
+                                <i id="icon-cam-2" data-lucide="cctv" class="w-10 h-10 text-gray-600 mb-2"></i>
+                                <span class="text-xs text-gray-400">Pasillo 1</span>
+                                <span id="ip-cam-2" class="text-[10px] text-red-500 font-bold">OFFLINE</span>
+                                <button onclick="conectarCamara(2)" class="mt-3 text-[10px] bg-yellow-600 hover:bg-yellow-500 text-black px-2 py-1 rounded font-bold">Conectar RJ45</button>
+                            </div>
+                            <!-- Cam 3 -->
+                            <div class="flex flex-col items-center">
+                                <i id="icon-cam-3" data-lucide="cctv" class="w-10 h-10 text-gray-600 mb-2"></i>
+                                <span class="text-xs text-gray-400">Comedor</span>
+                                <span id="ip-cam-3" class="text-[10px] text-red-500 font-bold">OFFLINE</span>
+                                <button onclick="conectarCamara(3)" class="mt-3 text-[10px] bg-yellow-600 hover:bg-yellow-500 text-black px-2 py-1 rounded font-bold">Conectar RJ45</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VISTA EQUIPO 2: REDES OFICINAS -->
+        <!-- ============================================== -->
+        <div id="view-equipo2" class="hidden-view p-6 max-w-5xl mx-auto min-h-screen flex flex-col">
+            <div class="flex items-center gap-4 border-b border-gray-800 pb-4 mb-6">
+                <button onclick="navigate('home')" class="p-2 text-gray-400 hover:text-blue-400 hover:bg-gray-800 rounded transition-colors" title="Volver">
+                    <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white uppercase"><span class="text-blue-500">CUADRILLA BETA:</span> Redes Oficinas</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
+                <!-- Teoría -->
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded">
+                    <h3 class="text-lg text-blue-400 mb-4 border-b border-gray-800 pb-2">&gt; MANUAL DE PROCEDIMIENTO</h3>
+                    <p class="text-sm text-gray-300 mb-4"><strong>Objetivo:</strong> Separar el tráfico de red de la administración de Ed. Media y Ed. Básica para que no puedan verse entre sí (Seguridad de datos).</p>
+                    
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li class="flex gap-3">
+                            <span class="bg-blue-500/20 text-blue-500 font-bold px-2 py-1 rounded h-fit">01</span>
+                            <div>
+                                <strong class="text-gray-200">Concepto de VLAN (Red de Área Local Virtual):</strong> 
+                                Físicamente es el mismo Switch, pero lógicamente lo cortaremos a la mitad mediante software.
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="bg-blue-500/20 text-blue-500 font-bold px-2 py-1 rounded h-fit">02</span>
+                            <div>
+                                <strong class="text-gray-200">Creación de VLANs:</strong> 
+                                Entrar a la consola del Switch Administrable. Crear <em>VLAN 10 (Media)</em> y <em>VLAN 20 (Básica)</em>.
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="bg-blue-500/20 text-blue-500 font-bold px-2 py-1 rounded h-fit">03</span>
+                            <div>
+                                <strong class="text-gray-200">Asignación de Puertos (Access Mode):</strong> 
+                                Configurar los puertos donde se conectan los PCs de Media para que solo pertenezcan a la VLAN 10, y los de Básica a la VLAN 20.
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="bg-blue-500/20 text-blue-500 font-bold px-2 py-1 rounded h-fit">04</span>
+                            <div>
+                                <strong class="text-gray-200">Prueba de Conectividad (Ping):</strong> 
+                                Un PC de Media NO debe poder hacer ping a un PC de Básica.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Simulación -->
+                <div class="bg-black border border-blue-500/30 p-6 rounded flex flex-col">
+                    <h3 class="text-lg text-blue-400 mb-4">&gt; CONSOLA SWITCH: ASIGNACIÓN VLAN</h3>
+                    <p class="text-sm text-gray-500 mb-6">Asigna el puerto correcto a cada sector para asegurar la red. Actualmente, todos se ven (Riesgo).</p>
+
+                    <div class="bg-gray-900 p-4 rounded border border-gray-700 mb-6 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="pc-case" class="text-blue-400"></i>
+                            <div>
+                                <div class="text-sm font-bold">Oficina MEDIA (Puerto 1)</div>
+                                <select id="vlan-p1" onchange="verificarVLAN()" class="mt-1 bg-black text-white border border-gray-600 text-xs p-1 rounded">
+                                    <option value="1">VLAN 1 (Por Defecto)</option>
+                                    <option value="10">VLAN 10 (Red Media)</option>
+                                    <option value="20">VLAN 20 (Red Básica)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="vlan-link" class="flex-1 mx-4 border-t-2 border-dashed border-red-500 relative">
+                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-black px-2 text-xs font-bold text-red-500" id="vlan-status">VULNERABLE: RED PLANA</div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <div class="text-right">
+                                <div class="text-sm font-bold">Oficina BÁSICA (Puerto 2)</div>
+                                <select id="vlan-p2" onchange="verificarVLAN()" class="mt-1 bg-black text-white border border-gray-600 text-xs p-1 rounded">
+                                    <option value="1">VLAN 1 (Por Defecto)</option>
+                                    <option value="10">VLAN 10 (Red Media)</option>
+                                    <option value="20">VLAN 20 (Red Básica)</option>
+                                </select>
+                            </div>
+                            <i data-lucide="pc-case" class="text-cyan-400"></i>
+                        </div>
+                    </div>
+
+                    <div id="vlan-terminal" class="bg-gray-950 p-4 rounded border border-gray-800 font-mono text-xs text-gray-400 h-32 overflow-y-auto">
+                        Switch> enable<br>
+                        Switch# show vlan brief<br>
+                        VLAN Name                             Status    Ports<br>
+                        ---- -------------------------------- --------- -------------------------------<br>
+                        1    default                          active    Fa0/1, Fa0/2<br>
+                        <span class="text-red-400">! ALERTA: Equipos de distintas oficinas comparten la VLAN 1. Aislar de inmediato.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VISTA EQUIPO 3: MANTENCIÓN P. -->
+        <!-- ============================================== -->
+        <div id="view-equipo3" class="hidden-view p-6 max-w-5xl mx-auto min-h-screen flex flex-col">
+            <div class="flex items-center gap-4 border-b border-gray-800 pb-4 mb-6">
+                <button onclick="navigate('home')" class="p-2 text-gray-400 hover:text-green-400 hover:bg-gray-800 rounded transition-colors" title="Volver">
+                    <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white uppercase"><span class="text-green-500">CUADRILLA GAMMA:</span> Mantención</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
+                <!-- Teoría -->
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded">
+                    <h3 class="text-lg text-green-400 mb-4 border-b border-gray-800 pb-2">&gt; PROTOCOLO DE MANTENIMIENTO PREVENTIVO/CORRECTIVO</h3>
+                    
+                    <div class="space-y-4 text-sm text-gray-400 mt-4">
+                        <div>
+                            <strong class="text-green-300 block mb-1">1. Diagnóstico de Hardware (Correctivo):</strong>
+                            - Verificar temperatura de CPU (Normal: 40-65°C). Si supera 85°C, requiere cambio de pasta térmica urgente.<br>
+                            - Limpieza de ventiladores con aire comprimido.
+                        </div>
+                        <div class="border-t border-gray-800 pt-3">
+                            <strong class="text-green-300 block mb-1">2. Optimización a Nivel de S.O. (Preventivo):</strong>
+                            - <em>SFC /scannow:</em> Comando para reparar archivos dañados de Windows.<br>
+                            - <em>Limpieza de Disco:</em> Eliminar archivos temporales (`%temp%`) y caché de actualizaciones que llenan el SSD.<br>
+                            - <em>Gestor de Arranque:</em> Desactivar programas innecesarios que inician con Windows (vía Task Manager).
+                        </div>
+                        <div class="border-t border-gray-800 pt-3">
+                            <strong class="text-green-300 block mb-1">3. Seguridad:</strong>
+                            - Análisis completo de malware (Windows Defender o Antivirus de terceros).<br>
+                            - Actualización de parches de seguridad (Windows Update).
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulación -->
+                <div class="bg-black border border-green-500/30 p-6 rounded flex flex-col">
+                    <h3 class="text-lg text-green-400 mb-4">&gt; HERRAMIENTA DE DIAGNÓSTICO (PC-DOC-01)</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <button onclick="ejecutarMantenimiento('temp')" class="bg-gray-800 hover:bg-gray-700 border border-gray-600 p-3 rounded text-left flex flex-col group">
+                            <i data-lucide="thermometer" class="text-red-400 mb-2 group-hover:scale-110 transition-transform"></i>
+                            <span class="font-bold text-gray-200 text-sm">Cambiar Pasta Térmica</span>
+                            <span class="text-xs text-gray-500">Bajar Temp. CPU (Actual: 89°C)</span>
+                        </button>
+                        <button onclick="ejecutarMantenimiento('clean')" class="bg-gray-800 hover:bg-gray-700 border border-gray-600 p-3 rounded text-left flex flex-col group">
+                            <i data-lucide="trash-2" class="text-blue-400 mb-2 group-hover:scale-110 transition-transform"></i>
+                            <span class="font-bold text-gray-200 text-sm">Limpiar %temp%</span>
+                            <span class="text-xs text-gray-500">Liberar espacio SSD</span>
+                        </button>
+                        <button onclick="ejecutarMantenimiento('sfc')" class="bg-gray-800 hover:bg-gray-700 border border-gray-600 p-3 rounded text-left flex flex-col group">
+                            <i data-lucide="file-code" class="text-yellow-400 mb-2 group-hover:scale-110 transition-transform"></i>
+                            <span class="font-bold text-gray-200 text-sm">Ejecutar SFC /scannow</span>
+                            <span class="text-xs text-gray-500">Reparar archivos S.O.</span>
+                        </button>
+                        <button onclick="ejecutarMantenimiento('scan')" class="bg-gray-800 hover:bg-gray-700 border border-gray-600 p-3 rounded text-left flex flex-col group">
+                            <i data-lucide="shield-alert" class="text-green-400 mb-2 group-hover:scale-110 transition-transform"></i>
+                            <span class="font-bold text-gray-200 text-sm">Escaneo Antivirus</span>
+                            <span class="text-xs text-gray-500">Búsqueda de Malware</span>
+                        </button>
+                    </div>
+
+                    <div class="flex-1 bg-gray-950 border border-gray-800 rounded p-4 font-mono text-sm overflow-hidden flex flex-col">
+                        <div class="text-gray-500 mb-2">root@sistema:~# log_viewer</div>
+                        <div id="maint-terminal" class="flex-1 overflow-y-auto text-green-500 space-y-1">
+                            <div>Sistema iniciado. Esperando acciones del técnico...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VISTA EQUIPO 4: DESPLIEGUE LAB -->
+        <!-- ============================================== -->
+        <div id="view-equipo4" class="hidden-view p-6 max-w-5xl mx-auto min-h-screen flex flex-col">
+            <div class="flex items-center gap-4 border-b border-gray-800 pb-4 mb-6">
+                <button onclick="navigate('home')" class="p-2 text-gray-400 hover:text-purple-400 hover:bg-gray-800 rounded transition-colors" title="Volver">
+                    <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white uppercase"><span class="text-purple-500">CUADRILLA DELTA:</span> Despliegue Lab</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
+                <!-- Teoría -->
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded">
+                    <h3 class="text-lg text-purple-400 mb-4 border-b border-gray-800 pb-2">&gt; MANUAL: INSTALACIÓN S.O. (FROM SCRATCH)</h3>
+                    
+                    <ol class="list-decimal list-inside space-y-3 text-sm text-gray-400">
+                        <li>
+                            <strong class="text-gray-200">Preparación del Medio:</strong> 
+                            Crear un Pendrive Booteable con Windows 10/11 utilizando la herramienta <em>Rufus</em>. (Seleccionar esquema de partición GPT para UEFI).
+                        </li>
+                        <li>
+                            <strong class="text-gray-200">Configuración BIOS/UEFI:</strong> 
+                            Encender el PC, entrar a la BIOS (F2 o DEL). Desactivar Secure Boot (si da problemas) y poner el USB como primera opción en el <em>Boot Priority</em>.
+                        </li>
+                        <li>
+                            <strong class="text-gray-200">Estructura de Particiones (Crítico en colegios):</strong> 
+                            El disco de 500GB SSD NO debe quedar en una sola partición.
+                            <ul class="list-disc list-inside ml-6 mt-2 text-gray-500">
+                                <li><strong>Disco C: (S.O. y Programas):</strong> ~150GB. Aquí instalaremos Windows. Este disco luego se congelará (Ej: DeepFreeze) para que los alumnos no lo dañen.</li>
+                                <li><strong>Disco D: (Datos/Alumnos):</strong> ~350GB. Aquí los alumnos guardarán sus trabajos de Word/Excel. No se congela.</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong class="text-gray-200">Post-Instalación:</strong> 
+                            Instalar drivers gráficos, Office, navegadores web, y finalmente activar el software congelador en el Disco C.
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Simulación -->
+                <div class="bg-black border border-purple-500/30 p-6 rounded flex flex-col">
+                    <h3 class="text-lg text-purple-400 mb-4">&gt; SIMULADOR: PARTICIONAMIENTO WINDOWS</h3>
+                    <p class="text-sm text-gray-500 mb-4">Unidad SSD detectada: <strong>500 GB (Espacio sin asignar)</strong>. Crea las particiones C: (Sistema) y D: (Datos).</p>
+
+                    <div id="setup-screen" class="bg-blue-900 flex-1 rounded border-2 border-gray-300 p-1 flex flex-col shadow-inner">
+                        <div class="bg-gray-200 text-black text-sm px-2 py-1 font-sans">Instalación de Windows</div>
+                        <div class="bg-gray-100 flex-1 p-4 font-sans text-black flex flex-col">
+                            <p class="text-sm mb-4">¿Dónde desea instalar Windows?</p>
+                            
+                            <!-- Lista de Particiones -->
+                            <div class="border border-gray-400 h-32 bg-white overflow-y-auto text-sm">
+                                <table class="w-full text-left" id="partition-table">
+                                    <tr class="border-b bg-gray-100">
+                                        <th class="p-1 font-normal">Nombre</th>
+                                        <th class="p-1 font-normal">Tamaño total</th>
+                                        <th class="p-1 font-normal">Tipo</th>
+                                    </tr>
+                                    <tr id="row-unallocated" class="hover:bg-blue-100 cursor-pointer bg-blue-50">
+                                        <td class="p-1"><i data-lucide="hard-drive" class="inline w-4 h-4 mr-1"></i>Espacio sin asignar</td>
+                                        <td class="p-1">500.0 GB</td>
+                                        <td class="p-1"></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- Controles -->
+                            <div class="mt-4 flex gap-4 text-sm" id="part-controls">
+                                <div class="flex items-center gap-2">
+                                    <label>Crear partición (MB):</label>
+                                    <input type="number" id="part-size" class="border border-gray-400 px-1 w-24" value="150000">
+                                </div>
+                                <button onclick="crearParticion()" class="bg-gray-300 hover:bg-gray-400 border border-gray-500 px-3 py-1 text-black shadow-sm">Nuevo</button>
+                            </div>
+                            
+                            <div id="install-msg" class="mt-auto text-center font-bold text-green-700 hidden">
+                                ¡Estructura correcta! (C: para S.O. y D: para Datos).<br>Procediendo a instalar Windows...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Inicializar iconos
+        lucide.createIcons();
+
+        // NAVEGACIÓN
+        function navigate(viewId) {
+            const views = ['home', 'equipo1', 'equipo2', 'equipo3', 'equipo4'];
+            views.forEach(v => {
+                const el = document.getElementById('view-' + v);
+                if (el) el.classList.add('hidden-view');
+            });
+            const targetEl = document.getElementById('view-' + viewId);
+            if (targetEl) targetEl.classList.remove('hidden-view');
+        }
+
+        // LOGICA EJE 1: CÁMARAS
+        function conectarCamara(id) {
+            const icon = document.getElementById(`icon-cam-${id}`);
+            const ip = document.getElementById(`ip-cam-${id}`);
+            const port = document.getElementById(`port-${id}`);
+
+            icon.classList.remove('text-gray-600');
+            icon.classList.add('text-yellow-400');
+            
+            ip.innerText = `192.168.1.10${id}`;
+            ip.classList.remove('text-red-500');
+            ip.classList.add('text-green-400');
+
+            port.classList.remove('bg-black');
+            port.classList.add('bg-yellow-500');
+            port.classList.add('shadow-[0_0_10px_rgba(234,179,8,1)]');
+        }
+
+        // LOGICA EJE 2: VLANs
+        function verificarVLAN() {
+            const vlan1 = document.getElementById('vlan-p1').value;
+            const vlan2 = document.getElementById('vlan-p2').value;
+            const link = document.getElementById('vlan-link');
+            const status = document.getElementById('vlan-status');
+            const terminal = document.getElementById('vlan-terminal');
+
+            if (vlan1 === vlan2) {
+                // Riesgo: Están en la misma VLAN
+                link.className = "flex-1 mx-4 border-t-2 border-dashed border-red-500 relative";
+                status.className = "absolute -top-3 left-1/2 transform -translate-x-1/2 bg-black px-2 text-xs font-bold text-red-500";
+                status.innerText = "VULNERABLE: COMUNICACIÓN ABIERTA";
+                terminal.innerHTML += `<br>Switch(config)# <span class="text-red-400">Error de Seguridad: Ambos sectores están en la VLAN ${vlan1}.</span>`;
+            } else if (vlan1 == "10" && vlan2 == "20") {
+                // Correcto: Aislados
+                link.className = "flex-1 mx-4 border-t-2 border-solid border-gray-700 relative";
+                status.className = "absolute -top-3 left-1/2 transform -translate-x-1/2 bg-black px-2 text-xs font-bold text-green-500";
+                status.innerText = "SEGURO: TRÁFICO AISLADO (VLAN 10 vs 20)";
+                terminal.innerHTML += `<br>Switch(config)# <span class="text-green-400">¡Éxito! Interfaz Fa0/1 asignada a VLAN 10. Interfaz Fa0/2 asignada a VLAN 20. Tráfico bloqueado entre ellas.</span>`;
+            } else {
+                // Parcialmente correcto pero no ideal
+                link.className = "flex-1 mx-4 border-t-2 border-solid border-gray-700 relative";
+                status.className = "absolute -top-3 left-1/2 transform -translate-x-1/2 bg-black px-2 text-xs font-bold text-yellow-500";
+                status.innerText = "AISLADOS (Pendiente Configurar Ambos)";
+            }
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // LOGICA EJE 3: MANTENCIÓN
+        function ejecutarMantenimiento(tipo) {
+            const term = document.getElementById('maint-terminal');
+            const time = new Date().toLocaleTimeString();
+            let msg = "";
+
+            if (tipo === 'temp') {
+                msg = `[${time}] > Extrayendo disipador... Limpiando pasta antigua... Aplicando pasta térmica nueva. Temp CPU bajó a 45°C. [HARDWARE OK]`;
+            } else if (tipo === 'clean') {
+                msg = `[${time}] > rm -rf %temp%/* ... Borrando caché de Windows Update. Liberados 14.5 GB en unidad SSD. [STORAGE OK]`;
+            } else if (tipo === 'sfc') {
+                msg = `[${time}] > Ejecutando SFC /scannow... Verificando 100%. Archivos de sistema dañados encontrados y reparados exitosamente. [OS OK]`;
+            } else if (tipo === 'scan') {
+                msg = `[${time}] > Iniciando análisis heurístico... Archivos escaneados: 345,012. Amenazas encontradas: 2 (Adware). Cuarentena aplicada. [SECURITY OK]`;
+            }
+
+            term.innerHTML += `<div class="mt-2 text-white animate-fadeIn">${msg}</div>`;
+            term.scrollTop = term.scrollHeight;
+        }
+
+        // LOGICA EJE 4: PARTICIONES
+        let unallocatedGB = 500;
+        let partitions = 0;
+
+        function crearParticion() {
+            const sizeMB = parseInt(document.getElementById('part-size').value);
+            const sizeGB = (sizeMB / 1000).toFixed(1);
+            
+            if (isNaN(sizeMB) || sizeMB <= 0 || sizeGB > unallocatedGB) {
+                alert("Tamaño inválido o excede el espacio disponible.");
+                return;
+            }
+
+            partitions++;
+            unallocatedGB -= sizeGB;
+            
+            const table = document.getElementById('partition-table');
+            const unallocatedRow = document.getElementById('row-unallocated');
+            
+            // Determinar tipo (Principal o Lógica/Datos)
+            const typeStr = partitions === 1 ? "Principal (Sistema C:)" : "Principal (Datos D:)";
+            
+            // Insertar nueva fila
+            const newRow = table.insertRow(partitions);
+            newRow.innerHTML = `
+                <td class="p-1"><i data-lucide="hard-drive" class="inline w-4 h-4 mr-1"></i>Unidad 0 Partición ${partitions}</td>
+                <td class="p-1">${sizeGB} GB</td>
+                <td class="p-1">${typeStr}</td>
+            `;
+
+            // Actualizar fila de espacio sin asignar
+            if (unallocatedGB > 1) {
+                unallocatedRow.cells[1].innerText = `${unallocatedGB.toFixed(1)} GB`;
+                document.getElementById('part-size').value = (unallocatedGB * 1000).toFixed(0);
+            } else {
+                unallocatedRow.style.display = 'none';
+                document.getElementById('part-controls').style.display = 'none';
+            }
+
+            // Re-renderizar iconos en las nuevas filas
+            lucide.createIcons();
+
+            // Verificar si cumplió el objetivo (Aprox 150GB para C, y el resto para D)
+            if (partitions === 2) {
+                document.getElementById('install-msg').classList.remove('hidden');
+            }
+        }
+
+    </script>
+</body>
+</html>
